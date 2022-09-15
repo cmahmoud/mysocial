@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const Schema = require("../lib/schema");
 const validator = require("../middlewares/validator");
 
+// POST /api/auth/register
 module.exports.register = [
     validator(Schema.register),
     async (req, res) => {
@@ -14,6 +15,7 @@ module.exports.register = [
         return res.status(200).json({ message: "User created succcessfully" });
     },
 ];
+// POST /api/auth/login
 module.exports.login = [
     validator(Schema.login),
     async (req, res) => {
