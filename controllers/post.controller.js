@@ -1,14 +1,67 @@
+const User = require("../models/user.model");
 const Post = require("../models/post.model");
 const Schema = require("../lib/schema");
 const validator = require("../middlewares/validator");
 const isAuthenticated = require("../middlewares/auth");
+
+// Get /api/post/:id
+module.exports.getSinglePost = [
+    isAuthenticated,
+    async (req, res) => {
+        const post = await Post.findById(req.params.id).populate({
+            path: "comments",
+            populate: { path: "user", select: "fname lname email username" },
+        });
+        return res
+            .status(200)
+            .json({ post, message: "post created successfully" });
+    },
+];
+// Get /api/post/me
+module.exports.getMyPosts = [
+    isAuthenticated,
+    async (req, res) => {
+        const user = await User.findById(req.user.id);
+        const posts = await Post.find({ user: user._id })
+            .populate({
+                path: "comments",
+                populate: {
+                    path: "user",
+                    select: "fname lname email username",
+                },
+            })
+            .populate("user", "fname lname email username")
+            .sort("-createdAt");
+        return res.status(200).json(posts);
+    },
+];
+// Get /api/post/all
+module.exports.getAllPosts = [
+    isAuthenticated,
+    async (req, res) => {
+        const user = await User.findById(req.user.id);
+        const posts = await Post.find({
+            user: { $in: [...user.followers, user._id] },
+        })
+            .populate({
+                path: "comments",
+                populate: {
+                    path: "user",
+                    select: "fname lname email username",
+                },
+            })
+            .populate("user", "fname lname email username")
+            .sort("-createdAt");
+        return res.status(200).json(posts);
+    },
+];
 
 // POST /api/post/create
 module.exports.createNewPost = [
     isAuthenticated,
     validator(Schema.PostOrComment),
     async (req, res) => {
-        const post = new Post({ ...req.body });
+        const post = new Post({ ...req.body, user: req.user.id });
         await post.save();
         return res
             .status(200)
