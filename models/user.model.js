@@ -22,6 +22,7 @@ const User = mongoose.Schema(
         password: {
             type: String,
             required: true,
+            select: false,
         },
         followers: [
             {
@@ -56,6 +57,10 @@ User.methods.generateToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: "30d",
     });
+};
+User.methods.checkPassword = async function (password) {
+    const isMatched = await bcrypt.compare(password, this.password);
+    return isMatched;
 };
 
 module.exports = mongoose.model("User", User);
