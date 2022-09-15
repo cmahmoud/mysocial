@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 
+const AuthRouter = require("./routes/auth.route");
+
 dotenv.config();
 connectDB();
 
@@ -21,6 +23,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(hpp());
+
+app.use("/api/auth", AuthRouter);
 
 app.listen(port, () => {
     console.log(`(MySocial) running on port ${port}...`);
