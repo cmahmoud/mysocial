@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 
 const AuthRouter = require("./routes/auth.route");
+const UserRouter = require("./routes/user.route");
 
 dotenv.config();
 connectDB();
@@ -25,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(hpp());
 
 app.use("/api/auth", AuthRouter);
+app.use("/api/user", UserRouter);
 
 app.listen(port, () => {
     console.log(`(MySocial) running on port ${port}...`);
