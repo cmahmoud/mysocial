@@ -59,7 +59,8 @@ module.exports.getAllPosts = [
                 },
             })
             .populate("user", "fname lname email username avatar")
-            .sort("-createdAt");
+            .sort("-createdAt")
+            .limit(50);
         return res.status(200).json(posts);
     },
 ];
