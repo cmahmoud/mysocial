@@ -8,6 +8,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Spinner from "./Spinner";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 export default function RecommendedToFollow() {
     const { isLoading } = useRecommendedUsersQuery();
@@ -27,27 +28,38 @@ export default function RecommendedToFollow() {
                     {recommended.map((user) => (
                         <li className="py-3" key={user._id}>
                             <div className="flex items-center space-x-4">
-                                <div className="flex-shrink-0">
-                                    {user.avatar ? (
-                                        <img
-                                            className="w-10 h-10 rounded-full"
-                                            src={user.avatar}
-                                            alt={user.fullname}
-                                        />
-                                    ) : (
-                                        <UserCircleIcon className="w-10 h-10 text-gray-500" />
-                                    )}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                        {user.fullname}
-                                    </p>
-                                    <p className="text-xs text-gray-500 truncate dark:text-gray-400">
-                                        {dayjs(user.createdAt).format(
-                                            "DD MMMM YYYY"
+                                <Link
+                                    to={`/user/profile/${user._id}`}
+                                    className="cursor-pointer"
+                                >
+                                    <div className="flex-shrink-0">
+                                        {user.avatar ? (
+                                            <img
+                                                className="w-10 h-10 rounded-full"
+                                                src={user.avatar}
+                                                alt={user.fullname}
+                                            />
+                                        ) : (
+                                            <UserCircleIcon className="w-10 h-10 text-gray-500" />
                                         )}
-                                    </p>
+                                    </div>
+                                </Link>
+                                <div className="flex-1 min-w-0">
+                                    <Link
+                                        to={`/user/profile/${user._id}`}
+                                        className="cursor-pointer"
+                                    >
+                                        <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                            {user.fullname}
+                                        </p>
+                                        <p className="text-xs text-gray-500 truncate dark:text-gray-400">
+                                            {dayjs(user.createdAt).format(
+                                                "DD MMMM YYYY"
+                                            )}
+                                        </p>
+                                    </Link>
                                 </div>
+
                                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                                     {current &&
                                     current.following?.includes(user._id) ? (
