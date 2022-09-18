@@ -24,6 +24,15 @@ const User = mongoose.Schema(
             required: true,
             select: false,
         },
+        avatar: {
+            type: String,
+        },
+        posts: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Post",
+            },
+        ],
         followers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -40,8 +49,17 @@ const User = mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        isActivated: {
+            type: Boolean,
+            default: false,
+        },
     },
-    { timestamps: true, versionKey: false }
+    {
+        timestamps: true,
+        versionKey: false,
+        toJSON: { virtuals: true, getters: true },
+        toObject: { virtuals: true, getters: true },
+    }
 );
 
 User.pre("save", async function (next) {
@@ -62,5 +80,7 @@ User.methods.checkPassword = async function (password) {
     const isMatched = await bcrypt.compare(password, this.password);
     return isMatched;
 };
-
+User.virtual("fullname").get(function () {
+    return `${this.fname} ${this.lname}`;
+});
 module.exports = mongoose.model("User", User);

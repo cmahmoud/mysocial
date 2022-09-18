@@ -11,6 +11,6 @@ module.exports.login = Joi.object({
     password: Joi.string().required().min(8).max(50),
 });
 module.exports.PostOrComment = Joi.object({
-    text: Joi.string().required(),
+    text: Joi.string().optional(),
     photo: Joi.string().optional(),
 });
