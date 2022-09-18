@@ -11,7 +11,6 @@ export default function AddPost() {
     const [addNewPost, { isLoading }] = useAddNewPostMutation();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target.image.files[0]);
         const formData = new FormData();
         formData.append("image", e.target.image.files[0]);
         formData.append("text", e.target.text.value);

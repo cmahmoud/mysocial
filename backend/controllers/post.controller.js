@@ -74,8 +74,8 @@ module.exports.uploadPhoto = [
 // POST /api/post/create
 module.exports.createNewPost = [
     isAuthenticated,
-    upload.single("image"),
     validator(Schema.PostOrComment),
+    upload.single("image"),
     async (req, res) => {
         const user = await User.findById(req.user.id);
         const photo = req.file
